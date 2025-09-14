@@ -171,21 +171,24 @@ public record PyPIMetadata(
             versionSpec = new VersionConstraint(versionSpecString);
         }
         if (parts.length > 1) {
-            var marker = parts[1].trim();
-            if (marker.startsWith("sys_platform")) {
-                var markerRest = marker.substring("sys_platform".length()).trim();
-                var quoteStart = markerRest.indexOf('\"');
-                if (quoteStart != -1) {
-                    sysPlatform = markerRest.substring(quoteStart + 1, markerRest.length() - 1).trim();
+            var markers = parts[1].trim().split(" and ");
+            for (var marker : markers) {
+                marker = marker.trim();
+                if (marker.startsWith("sys_platform")) {
+                    var markerRest = marker.substring("sys_platform".length()).trim();
+                    var quoteStart = markerRest.indexOf('\"');
+                    if (quoteStart != -1) {
+                        sysPlatform = markerRest.substring(quoteStart + 1, markerRest.length() - 1).trim();
+                    }
+                } else if (marker.startsWith("platform_machine")) {
+                    var markerRest = marker.substring("platform_machine".length()).trim();
+                    var quoteStart = markerRest.indexOf('\"');
+                    if (quoteStart != -1) {
+                        platformMachine = markerRest.substring(quoteStart + 1, markerRest.length() - 1).trim();
+                    }
+                } else if (marker.startsWith("extra")) {
+                    return null;
                 }
-            } else if (marker.startsWith("platform_machine")) {
-                var markerRest = marker.substring("platform_machine".length()).trim();
-                var quoteStart = markerRest.indexOf('\"');
-                if (quoteStart != -1) {
-                    platformMachine = markerRest.substring(quoteStart + 1, markerRest.length() - 1).trim();
-                }
-            } else if (marker.startsWith("extra")) {
-                return null;
             }
         }
         return new DistRequirement(name, versionSpec, sysPlatform, platformMachine);
