@@ -1,0 +1,26 @@
+plugins {
+    id "dev.lukebemish.pypi-gradle"
+}
+
+configurations {
+    packages {
+        attributes {
+            attribute(OperatingSystemFamily.OPERATING_SYSTEM_ATTRIBUTE, objects.named(OperatingSystemFamily, OperatingSystemFamily.LINUX))
+            attribute(MachineArchitecture.ARCHITECTURE_ATTRIBUTE, objects.named(MachineArchitecture, MachineArchitecture.X86_64))
+            attribute(Category.CATEGORY_ATTRIBUTE, objects.named(Category, Category.LIBRARY))
+        }
+    }
+}
+
+dependencies {
+    packages("pypi:requests:2.32.5")
+}
+
+tasks.register("resolvePackages") {
+    var packages = files(configurations.packages)
+    inputs.files(packages)
+    doLast {
+        println("Resolved packages:")
+        packages.files.forEach { println(it) }
+    }
+}

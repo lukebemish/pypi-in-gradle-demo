@@ -1,0 +1,20 @@
+plugins {
+    id("java-gradle-plugin")
+}
+
+gradlePlugin {
+    plugins {
+        register("pypiInGradlePlugin") {
+            id = "dev.lukebemish.pypi-gradle"
+            implementationClass = "dev.lukebemish.pypigradle.PyPIGradlePlugin"
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation("com.squareup.moshi:moshi:1.15.2")
+}
